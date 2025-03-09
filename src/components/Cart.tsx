@@ -9,13 +9,14 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { X, Plus, Minus, ShoppingBag, AlertCircle, Trash2 } from "lucide-react";
-import { CartItem, Product } from "@/types";
+import { Product } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import type { CartItem as CartItemType } from "@/types";
 
 interface CartProps {
   isOpen: boolean;
   onClose: () => void;
-  items: CartItem[];
+  items: CartItemType[];
   onUpdateQuantity: (productId: string, quantity: number) => void;
   onRemoveItem: (productId: string) => void;
 }
@@ -129,7 +130,7 @@ const CartItem = ({
   onUpdateQuantity, 
   onRemoveItem 
 }: { 
-  item: CartItem; 
+  item: CartItemType; 
   onUpdateQuantity: (productId: string, quantity: number) => void;
   onRemoveItem: (productId: string) => void;
 }) => {

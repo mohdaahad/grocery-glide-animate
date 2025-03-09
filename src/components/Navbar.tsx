@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { ShoppingCart, Search, User, Menu, X, Mic } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ShoppingCart, Search, User, Menu, X, Mic, Tag, Package } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -11,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 const Navbar = ({ cartItemsCount = 0, onCartClick }: { cartItemsCount: number; onCartClick: () => void }) => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const { toast } = useToast();
+  const location = useLocation();
   
   const handleVoiceSearch = () => {
     toast({
@@ -18,6 +20,10 @@ const Navbar = ({ cartItemsCount = 0, onCartClick }: { cartItemsCount: number; o
       description: "Voice search is coming soon!",
       duration: 3000,
     });
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
   };
 
   return (
@@ -34,17 +40,17 @@ const Navbar = ({ cartItemsCount = 0, onCartClick }: { cartItemsCount: number; o
               </SheetTrigger>
               <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                 <nav className="flex flex-col gap-4 mt-8">
-                  <a href="#" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">Home</a>
-                  <a href="#" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">Categories</a>
-                  <a href="#" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">Deals</a>
-                  <a href="#" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">My Orders</a>
-                  <a href="#" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">Settings</a>
+                  <Link to="/" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">Home</Link>
+                  <Link to="/categories" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">Categories</Link>
+                  <Link to="/deals" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">Deals</Link>
+                  <Link to="/my-orders" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">My Orders</Link>
+                  <Link to="/profile" className="px-2 py-1 rounded-md hover:bg-accent transition-colors">Profile</Link>
                 </nav>
               </SheetContent>
             </Sheet>
-            <a href="/" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <span className="text-primary text-xl font-bold">GroceryGlide</span>
-            </a>
+            </Link>
           </div>
 
           {/* Search Bar - Desktop */}
@@ -104,29 +110,59 @@ const Navbar = ({ cartItemsCount = 0, onCartClick }: { cartItemsCount: number; o
               <Search className="h-5 w-5" />
             </Button>
             
-            <Button variant="ghost" size="icon" className="relative" onClick={onCartClick}>
-              <ShoppingCart className="h-5 w-5" />
-              {cartItemsCount > 0 && (
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-primary text-xs">
-                  {cartItemsCount}
-                </Badge>
-              )}
-            </Button>
+            <Link to="/cart">
+              <Button variant="ghost" size="icon" className="relative" onClick={onCartClick}>
+                <ShoppingCart className="h-5 w-5" />
+                {cartItemsCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-primary text-xs">
+                    {cartItemsCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
             
-            <Avatar className="h-8 w-8 transition-transform hover:scale-110">
-              <AvatarFallback className="bg-secondary text-secondary-foreground">
-                <User className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
+            <Link to="/profile">
+              <Avatar className="h-8 w-8 transition-transform hover:scale-110">
+                <AvatarFallback className="bg-secondary text-secondary-foreground">
+                  <User className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
+            </Link>
           </div>
         </div>
 
         {/* Navigation - Desktop */}
         <nav className="hidden md:flex items-center space-x-6 mt-1">
-          <a href="#" className="text-sm font-medium hover:text-primary transition-colors">Home</a>
-          <a href="#" className="text-sm font-medium hover:text-primary transition-colors">Categories</a>
-          <a href="#" className="text-sm font-medium hover:text-primary transition-colors">Deals</a>
-          <a href="#" className="text-sm font-medium hover:text-primary transition-colors">My Orders</a>
+          <Link 
+            to="/" 
+            className={`text-sm font-medium hover:text-primary transition-colors ${isActive('/') ? 'text-primary' : ''}`}
+          >
+            Home
+          </Link>
+          <Link 
+            to="/categories" 
+            className={`text-sm font-medium hover:text-primary transition-colors ${isActive('/categories') ? 'text-primary' : ''}`}
+          >
+            Categories
+          </Link>
+          <Link 
+            to="/deals" 
+            className={`text-sm font-medium hover:text-primary transition-colors ${isActive('/deals') ? 'text-primary' : ''}`}
+          >
+            <div className="flex items-center">
+              <Tag className="h-3 w-3 mr-1" />
+              Deals
+            </div>
+          </Link>
+          <Link 
+            to="/my-orders" 
+            className={`text-sm font-medium hover:text-primary transition-colors ${isActive('/my-orders') ? 'text-primary' : ''}`}
+          >
+            <div className="flex items-center">
+              <Package className="h-3 w-3 mr-1" />
+              My Orders
+            </div>
+          </Link>
         </nav>
       </div>
     </div>
